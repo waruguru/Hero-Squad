@@ -1,0 +1,10 @@
+#if($hero)
+<h1>$hero.getName()</h1>
+<h2>Age:  $hero.getAge()</h2>
+<h2>SuperPower:  $hero.getSpecialPower()</h2>
+<h2>Weakness:  $hero.getWeakness()</h2>
+
+#else
+<em><p>Oops! We can't seem to find that Hero</p></em>
+#end
+<a href="/squads">All Squads</a>
