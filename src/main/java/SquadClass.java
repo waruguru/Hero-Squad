@@ -15,4 +15,24 @@ public class SquadClass {
         this.mID = mID;
         this.mHeros = mHeros;
     }
+
+    public String getmName() {
+        return mName;
+    }
+
+    public Integer getmMaxSize() {
+        return mMaxSize;
+    }
+
+    public static ArrayList<SquadClass> getInstances() {
+        return instances;
+    }
+
+    public int getmID() {
+        return mID;
+    }
+
+    public List<HeroClass> getmHeros() {
+        return mHeros;
+    }
 }
