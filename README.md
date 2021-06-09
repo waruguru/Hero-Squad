@@ -1,10 +1,10 @@
-# Hero Squad
+# Hero-Squad
 
 An app that allows you to recruit a well-balanced team of superheroes (or any other character-type of your choosing).
 
 ## Getting Started
 
-After  building using gradle,  the application can be run sing gradle , run
+After  building using gradle,  the application can be run on gradle run command
 
 
 ```
@@ -24,8 +24,8 @@ Tests are run using gradle. From the root of the project directory run gradle te
 
 
 ## Authors
+Muriithi Joyce
 
-* **Shariff Mohammed**
 
 
 ## License
