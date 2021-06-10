@@ -1,92 +1,72 @@
+import spark.ModelAndView;
+import spark.template.velocity.VelocityTemplateEngine;
+
 import java.util.HashMap;
 import java.util.Map;
 
+import static spark.Spark.*;
 public class App {
-    staticFileLocation("/public");
-    String layout = "templates/layout.vtl";
-
-    ProcessBuilder process = new ProcessBuilder();
-    Integer port;
-    if (process.environment().get("PORT") != null) {
-        port = Integer.parseInt(process.environment().get("PORT"));
-    } else {
-        port = 4567;
-    };
-
-    setPort(port);
-
-    get("/", (request, response) -> {
+    static int getHerokuAssignedPort() {
+        ProcessBuilder processBuilder = new ProcessBuilder();
+        if (processBuilder.environment().get("PORT") != null) {
+            return Integer.parseInt(processBuilder.environment().get("PORT"));
+        }
+        return 4567; //return default port if heroku-port isn't set (i.e. on localhost)
+    }
+    public static void main(String[] args) {
+        port(getHerokuAssignedPort());
+        staticFileLocation("/public");
         Map<String, Object> model = new HashMap<String, Object>();
-        model.put("template", "templates/index.vtl");
-        return new ModelAndView(model, layout);
-    }, new VelocityTemplateEngine());
-
-    get("squads/:id/heros/new", (request, response) -> {
-        Map<String, Object> model = new HashMap<String, Object>();
-        Squad squad = Squad.find(Integer.parseInt(request.params(":id")));
-        model.put("squad", squad);
-        model.put("template", "templates/squad-heros-form.vtl");
-        return new ModelAndView(model, layout);
-    }, new VelocityTemplateEngine());
-
-    get("/heros", (request, response) -> {
-        Map<String, Object> model = new HashMap<String, Object>();
-        model.put("heros", Hero.all());
-        model.put("template", "templates/heros.vtl");
-        return new ModelAndView(model, layout);
-    }, new VelocityTemplateEngine());
-
-    post("/heros", (request, response) -> {
-        Map<String, Object> model = new HashMap<String, Object>();
-        Squad squad = Squad.find(Integer.parseInt(request.queryParams("squadId")));
-        String name = request.queryParams("name");
-        Integer age = Integer.parseInt(request.queryParams("age"));
-        String specialPower = request.queryParams("special_power");
-        String weakness = request.queryParams("weakness");
-        Hero newHero = new Hero(name, age, specialPower, weakness);
-        squad.addHero(newHero);
-        model.put("squad", squad);
-        model.put("template", "templates/squad-hero-success.vtl");
-        return new ModelAndView(model, layout);
-    }, new VelocityTemplateEngine());
-
-    get("/heros/:id", (request, response) -> {
-        Map<String, Object> model = new HashMap<String, Object>();
-        Hero hero = Hero.find(Integer.parseInt(request.params(":id")));
-        model.put("hero", hero);
-        model.put("template", "templates/hero.vtl");
-        return new ModelAndView(model, layout);
-    }, new VelocityTemplateEngine());
-
-    get("/squads/new", (request, response) -> {
-        Map<String, Object> model = new HashMap<String, Object>();
-        model.put("template", "templates/squad-form.vtl");
-        return new ModelAndView(model, layout);
-    }, new VelocityTemplateEngine());
-
-    post("/squads", (request, response) -> {
-        Map<String, Object> model = new HashMap<String, Object>();
-        String name = request.queryParams("name");
-        Integer maxSize = Integer.parseInt(request.queryParams("maxSize"));
-        Squad newSquad = new Squad(name, maxSize);
-        model.put("template", "templates/squad-success.vtl");
-        return new ModelAndView(model, layout);
-    }, new VelocityTemplateEngine());
-
-    get("/squads", (request, response) -> {
-        Map<String, Object> model = new HashMap<String, Object>();
-        model.put("squads", Squad.all());
-        model.put("template", "templates/squads.vtl");
-        return new ModelAndView(model, layout);
-    }, new VelocityTemplateEngine());
-
-    get("/squads/:id", (request, response) -> {
-        Map<String, Object> model = new HashMap<String, Object>();
-        Squad squad = Squad.find(Integer.parseInt(request.params(":id")));
-        model.put("squad", squad);
-        model.put("template", "templates/squad.vtl");
-        return new ModelAndView(model, layout);
-    }, new VelocityTemplateEngine());
-
-}
+//        ProcessBuilder process = new ProcessBuilder();
+//        Integer port;
+//        if (process.environment().get("PORT") != null) {
+//            port = Integer.parseInt(process.environment().get("PORT"));
+//        } else {
+//            port = 4567;
+//        }
+//
+//        setPort(port);
+        staticFileLocation("/public");
+        String layout = "templates/layout.vtl";
+        get("/", (request, response) -> {
+            model.put("template", "templates/home.vtl" );
+            return new ModelAndView(model, layout);
+        }, new VelocityTemplateEngine());
+        get("/squadform", (request, response) -> {
+            model.put("template", "templates/squadform.vtl");
+            return new ModelAndView(model, layout);
+        }, new VelocityTemplateEngine());
+        get("/squad", (request, response) -> {
+            String squadname = request.queryParams("squadname");
+            String squadcause = request.queryParams("squadcause");
+            String membernumber = request.queryParams("membernumber");
+            model.put("squadname", squadname);
+            model.put("squadcause", squadcause);
+            model.put("membernumber", membernumber);
+            model.put("template", "templates/squadteam.vtl");
+            return new ModelAndView(model, layout);
+        }, new VelocityTemplateEngine());
+        get("/heroform", (request, response) -> {
+            model.put("template", "templates/heroform.vtl");
+            return new ModelAndView(model, layout);
+        }, new VelocityTemplateEngine());
+        get("/hero", (request, response) -> {
+            String heroname = request.queryParams("heroname");
+            String whichsquad = request.queryParams("whichsquad");
+            String heropower = request.queryParams("heropower");
+            String heroweakness = request.queryParams("heroweakness");
+            String heroage = request.queryParams("heroage");
+            model.put("heroname", heroname);
+            model.put("whichsquad", whichsquad);
+            model.put("heropower", heropower);
+            model.put("heroweakness", heroweakness);
+            model.put("heroage", heroage);
+            model.put("template", "templates/hero.vtl");
+            return new ModelAndView(model, layout);
+        }, new VelocityTemplateEngine());
+        get("/herolist", (request, response) -> {
+            model.put("template", "templates/listhero.vtl" );
+            return new ModelAndView(model, layout);
+        }, new VelocityTemplateEngine());
+    }
 }
