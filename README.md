@@ -38,6 +38,9 @@ Java, Graddle.
 
 Tests are run using gradle. From the root of the project directory run gradle test
 
+##Live Link
+https://first-app-moringa.herokuapp.com/squadform
+
 ## Known Bugs
 no bugs yet
 
